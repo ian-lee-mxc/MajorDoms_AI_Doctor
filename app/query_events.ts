@@ -68,6 +68,10 @@ export async function trackClaimedEvents(fromBlock: number, toBlock: number): Pr
     logs.forEach((log, index) => {
         try {
             const parsedLog = contract.interface.parseLog(log);
+            if (!parsedLog) {
+                throw new Error('parsedLog is null.');
+            }
+
             const tokenId = parsedLog.args[1].toString();  // tokenId as string
             const memo = parsedLog.args[6];
             const timestamp = parsedLog.args[8].toString();  // timestamp as string
