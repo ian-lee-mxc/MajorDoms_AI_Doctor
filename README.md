@@ -1,8 +1,11 @@
 # MajorDoms_AI_Doctor
 
+Install the needed dependencies:
+````
+npm install
+````
 
 command to run the main-script:
-bash
 ````
 node main_testing.js
 ````
