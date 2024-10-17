@@ -62,20 +62,21 @@ function askForTokenId(transactions: Array<{ tokenId: string, content: string, t
             const heartRateAnalysis = ratings.rates(weeklyGroupedHeartRateData);
             const oxygenAnalysis = ratings.oxygens(weeklyGroupedOxygenData);
 
-            // Combine all analyses into one data object to send to Ragflow
-            const analysisData = {
-                tokenId: inputTokenId,
-                sleep: sleepAnalysis,
-                steps: stepsAnalysis,
-                heartRate: heartRateAnalysis,
-                oxygen: oxygenAnalysis
-            };
+            // Combine analyses for RAGFlow
+            let health_data = '';
+            if (stepsAnalysis.total > 0) {
+                health_data += `Walked ${stepsAnalysis.total} steps and ${stepsAnalysis.km} km. Burned ${stepsAnalysis.kcal} kcal by walking.\n`;
+            }
+            if (heartRateAnalysis.average > 0) {
+                health_data += `Average Heartrate is ${heartRateAnalysis.average} BPM.\n`;
+            }
+            if (oxygenAnalysis.average > 0) {
+                health_data += `Average blood oxygen level is ${oxygenAnalysis.average.toFixed(2)}%.`;
+            }
 
-            //console.log("Here is the analysis data:", JSON.stringify(analysisData, null, 2)); ZU LANGE AUSGABE
-
-            console.log("Here is the analysis data:", analysisData);
+            console.log("Here is the analysis data:", health_data);
             // Send the analyzed data to Ragflow
-            await sendToRagflow(analysisData);
+            await sendToRagflow(inputTokenId, health_data);
         } else {
             console.log(`tokenId ${inputTokenId} was not found.`);
         }
